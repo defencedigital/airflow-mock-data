@@ -1,0 +1,6 @@
+{
+  "data": "sample payload",
+  "status": "success",
+  "timestamp": "2026-07-29T00:00:00Z",
+  "source": "github-mock-api"
+}
