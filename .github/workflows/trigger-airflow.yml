@@ -1,0 +1,26 @@
+name: Trigger Airflow DAG on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  trigger-airflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Airflow DAG
+        run: |
+          curl -X POST "${{ secrets.AIRFLOW_API_URL }}/api/v2/dags/github_webhook_dag/dagRuns" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.AIRFLOW_API_TOKEN }}" \
+            -d '{
+              "logical_date": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",
+              "conf": {
+                "action": "release_published",
+                "release_name": "${{ github.event.release.name }}",
+                "release_tag": "${{ github.event.release.tag_name }}",
+                "repository": "${{ github.repository }}",
+                "sender": "${{ github.actor }}",
+                "release_url": "${{ github.event.release.html_url }}"
+              }
+            }'
