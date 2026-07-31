@@ -1,0 +1,25 @@
+name: Create Release on Zip Upload
+
+on:
+  push:
+    paths:
+      - '**.zip'   # triggers when any .zip is pushed
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get zip filename
+        id: zip
+        run: echo "file=$(ls *.zip | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: release-${{ github.run_number }}
+          name: Release ${{ github.run_number }}
+          files: ${{ steps.zip.outputs.file }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
