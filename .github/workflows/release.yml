@@ -5,6 +5,9 @@ on:
     paths:
       - '**.zip'   # triggers when any .zip is pushed
 
+permissions:
+  contents: write   # ← required to create releases
+
 jobs:
   release:
     runs-on: ubuntu-latest
